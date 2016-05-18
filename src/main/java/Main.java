@@ -19,17 +19,14 @@ public class Main {
         int headerCount = 0;
         List<String> headers = new ArrayList<String>();
 
-        String csvFile = "src/test/resources/data.csv";
+        String csvFile = "src/test/resources/data.csv"; // TODO pass file input via command line argument
         try {
-            System.out.println(new File(csvFile).getCanonicalPath());
-            // output /Users/ukilucas/Dropbox/dev/java-jira-csv/src/test/resources/data.csv
+            System.out.println("Attempting to read file: " + new File(csvFile).getCanonicalPath());
         } catch (Exception e) {
         }
         BufferedReader br = null;
         String line = "";
-        String separator = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
-        //  "/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/";
-        //  ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
+        String separator = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"; // TODO this could be improved to include empty cells
 
         try {
 
@@ -39,8 +36,7 @@ public class Main {
                 rowCounter++;
                 System.out.println(rowCounter + ") original row: \n" + line);
                 line = line.replaceAll(",,", ", ,"); // replace empty cells ,, with single space - TODO this is a cludge
-//                line = line.replaceAll(",", " ,"); // replace
-                System.out.println("replaced row: \n" + line);
+                //System.out.println("replaced row: \n" + line);
                 String[] columns = line.split(separator, -1);
 
                 int i = 0;
