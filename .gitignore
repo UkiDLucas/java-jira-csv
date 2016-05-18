@@ -1,9 +1,10 @@
+.gradle/
+.idea/
 .mtj.tmp/
 *.class
+*.csv
 *.ear
 *.jar
 *.war
 ############### Keep sorted alphabetically ###############
 hs_err_pid*
-.gradle/
-.idea/
