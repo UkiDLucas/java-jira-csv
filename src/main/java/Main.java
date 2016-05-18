@@ -3,6 +3,8 @@
  */
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -14,6 +16,8 @@ public class Main {
     }
 
     public void run() {
+        int headerCount = 0;
+        List<String> headers = new ArrayList<String>();
 
         String csvFile = "src/test/resources/data.csv";
         try {
@@ -23,22 +27,34 @@ public class Main {
         }
         BufferedReader br = null;
         String line = "";
-        String separator = ",\"\",";
+        String separator = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
+        //  "/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/";
+        //  ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
 
         try {
 
             br = new BufferedReader(new FileReader(csvFile));
-            int counter = 0;
+            int rowCounter = 0;
             while ((line = br.readLine()) != null) {
-                counter++;
-                System.out.println(counter + ") original row: " + line);
-                //line.replace(",,", ",\"\","); // replace empty cells ,, with empty string ,"",
-                //line.replace(",,", ",\"\","); // replace empty cells ,, with empty string ,"",
-                //System.out.println("replaced row: " + line);
-                String[] columns = line.split(separator);
-                System.out.println("column count " + columns.length);
+                rowCounter++;
+                System.out.println(rowCounter + ") original row: \n" + line);
+                line = line.replaceAll(",,", ", ,"); // replace empty cells ,, with single space - TODO this is a cludge
+//                line = line.replaceAll(",", " ,"); // replace
+                System.out.println("replaced row: \n" + line);
+                String[] columns = line.split(separator, -1);
 
-                System.out.println("column 0: " + columns[0]  );
+                int i = 0;
+                for (String s : columns) {
+                    if (rowCounter == 1) { // header row only
+                        headers.add(s);
+                    }
+                    System.out.println(headers.get(i) + " : " + s);
+                    i++;
+                }
+
+                if (headerCount < 1) headerCount = columns.length; // treat first row as headers
+                if (columns.length != headerCount)
+                    throw new RuntimeException("Number of items in the row (" + columns.length + ") do not match header count of " + headerCount);
             }
 
         } catch (FileNotFoundException e) {
